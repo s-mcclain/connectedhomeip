@@ -32,8 +32,6 @@ declare_args() {
   ota_periodic_query_timeout_sec = 86400
 }
 
-chip_detail_logging = sl_verbose_mode
-
 import("${silabs_common_plat_dir}/args.gni")
 
 # Sanity check
@@ -185,8 +183,8 @@ source_set("efr32-common") {
   }
 
   if (sl_enable_rgb_led) {
-    sources += [ "${silabs_common_plat_dir}/led/RGBLEDWidget.cpp" ]
-    include_dirs = [ "${silabs_common_plat_dir}/rgb_led" ]
+    sources += [ "${silabs_common_plat_dir}/rgb_led/RGBLEDWidget.cpp" ]
+    include_dirs += [ "${silabs_common_plat_dir}/rgb_led" ]
   }
 
   if (chip_build_libshell) {

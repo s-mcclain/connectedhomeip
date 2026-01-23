@@ -2511,6 +2511,19 @@ static id _Nullable DecodeEventPayloadForActivatedCarbonFilterMonitoringCluster(
     *aError = CHIP_ERROR_IM_MALFORMED_EVENT_PATH_IB;
     return nil;
 }
+static id _Nullable DecodeEventPayloadForWaterTankLevelMonitoringCluster(EventId aEventId, TLV::TLVReader & aReader, CHIP_ERROR * aError)
+{
+    using namespace Clusters::WaterTankLevelMonitoring;
+    switch (aEventId) {
+    default: {
+        // Not a known WaterTankLevelMonitoring event.
+        break;
+    }
+    }
+
+    *aError = CHIP_ERROR_IM_MALFORMED_EVENT_PATH_IB;
+    return nil;
+}
 static id _Nullable DecodeEventPayloadForBooleanStateConfigurationCluster(EventId aEventId, TLV::TLVReader & aReader, CHIP_ERROR * aError)
 {
     using namespace Clusters::BooleanStateConfiguration;
@@ -4703,6 +4716,19 @@ static id _Nullable DecodeEventPayloadForSoilMeasurementCluster(EventId aEventId
     *aError = CHIP_ERROR_IM_MALFORMED_EVENT_PATH_IB;
     return nil;
 }
+static id _Nullable DecodeEventPayloadForAmbientContextSensingCluster(EventId aEventId, TLV::TLVReader & aReader, CHIP_ERROR * aError)
+{
+    using namespace Clusters::AmbientContextSensing;
+    switch (aEventId) {
+    default: {
+        // Not a known AmbientContextSensing event.
+        break;
+    }
+    }
+
+    *aError = CHIP_ERROR_IM_MALFORMED_EVENT_PATH_IB;
+    return nil;
+}
 static id _Nullable DecodeEventPayloadForWiFiNetworkManagementCluster(EventId aEventId, TLV::TLVReader & aReader, CHIP_ERROR * aError)
 {
     using namespace Clusters::WiFiNetworkManagement;
@@ -5229,6 +5255,20 @@ static id _Nullable DecodeEventPayloadForPushAVStreamTransportCluster(EventId aE
             }
             value.activationReason = memberValue;
         } while (0);
+        do {
+            NSNumber * _Nonnull memberValue;
+            memberValue = [NSNumber numberWithUnsignedChar:chip::to_underlying(cppValue.containerType)];
+            value.containerType = memberValue;
+        } while (0);
+        do {
+            NSNumber * _Nullable memberValue;
+            if (cppValue.CMAFSessionNumber.HasValue()) {
+                memberValue = [NSNumber numberWithUnsignedLongLong:cppValue.CMAFSessionNumber.Value()];
+            } else {
+                memberValue = nil;
+            }
+            value.cmafSessionNumber = memberValue;
+        } while (0);
 
         return value;
     }
@@ -5246,6 +5286,20 @@ static id _Nullable DecodeEventPayloadForPushAVStreamTransportCluster(EventId aE
             memberValue = [NSNumber numberWithUnsignedShort:cppValue.connectionID];
             value.connectionID = memberValue;
         } while (0);
+        do {
+            NSNumber * _Nonnull memberValue;
+            memberValue = [NSNumber numberWithUnsignedChar:chip::to_underlying(cppValue.containerType)];
+            value.containerType = memberValue;
+        } while (0);
+        do {
+            NSNumber * _Nullable memberValue;
+            if (cppValue.CMAFSessionNumber.HasValue()) {
+                memberValue = [NSNumber numberWithUnsignedLongLong:cppValue.CMAFSessionNumber.Value()];
+            } else {
+                memberValue = nil;
+            }
+            value.cmafSessionNumber = memberValue;
+        } while (0);
 
         return value;
     }
@@ -5262,6 +5316,23 @@ static id _Nullable DecodeEventPayloadForChimeCluster(EventId aEventId, TLV::TLV
 {
     using namespace Clusters::Chime;
     switch (aEventId) {
+    case Events::ChimeStartedPlaying::Id: {
+        Events::ChimeStartedPlaying::DecodableType cppValue;
+        *aError = DataModel::Decode(aReader, cppValue);
+        if (*aError != CHIP_NO_ERROR) {
+            return nil;
+        }
+
+        __auto_type * value = [MTRChimeClusterChimeStartedPlayingEvent new];
+
+        do {
+            NSNumber * _Nonnull memberValue;
+            memberValue = [NSNumber numberWithUnsignedChar:cppValue.chimeID];
+            value.chimeID = memberValue;
+        } while (0);
+
+        return value;
+    }
     default: {
         // Not a known Chime event.
         break;
@@ -5791,6 +5862,9 @@ id _Nullable MTRDecodeEventPayload(const ConcreteEventPath & aPath, TLV::TLVRead
     case Clusters::ActivatedCarbonFilterMonitoring::Id: {
         return DecodeEventPayloadForActivatedCarbonFilterMonitoringCluster(aPath.mEventId, aReader, aError);
     }
+    case Clusters::WaterTankLevelMonitoring::Id: {
+        return DecodeEventPayloadForWaterTankLevelMonitoringCluster(aPath.mEventId, aReader, aError);
+    }
     case Clusters::BooleanStateConfiguration::Id: {
         return DecodeEventPayloadForBooleanStateConfigurationCluster(aPath.mEventId, aReader, aError);
     }
@@ -5919,6 +5993,9 @@ id _Nullable MTRDecodeEventPayload(const ConcreteEventPath & aPath, TLV::TLVRead
     }
     case Clusters::SoilMeasurement::Id: {
         return DecodeEventPayloadForSoilMeasurementCluster(aPath.mEventId, aReader, aError);
+    }
+    case Clusters::AmbientContextSensing::Id: {
+        return DecodeEventPayloadForAmbientContextSensingCluster(aPath.mEventId, aReader, aError);
     }
     case Clusters::WiFiNetworkManagement::Id: {
         return DecodeEventPayloadForWiFiNetworkManagementCluster(aPath.mEventId, aReader, aError);

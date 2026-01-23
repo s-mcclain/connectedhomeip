@@ -80,12 +80,35 @@ PushAvStreamTransportManager::AllocatePushTransport(const TransportOptionsStruct
         ChipLogError(Camera, "CameraDeviceInterface not initialized for AllocatePushTransport");
         return Status::Failure;
     }
+
+    if (transportOptions.containerOptions.CMAFContainerOptions.HasValue())
+    {
+        const auto cmafInterface = transportOptions.containerOptions.CMAFContainerOptions.Value().CMAFInterface;
+
+        if (!IsCMAFInterfaceSupported(cmafInterface))
+        {
+            ChipLogError(Camera, "PushAvStreamTransportManager, Unsupported CMAF interface type: %u",
+                         static_cast<uint16_t>(cmafInterface));
+            return Status::Failure;
+        }
+
+        ChipLogDetail(Camera, "PushAvStreamTransportManager, CMAF interface selected: %u", static_cast<uint16_t>(cmafInterface));
+    }
+
     mTransportOptionsMap[connectionID] = transportOptions;
 
     ChipLogProgress(Camera, "PushAvStreamTransportManager, Create PushAV Transport for Connection: [%u]", connectionID);
-    mTransportMap[connectionID] =
-        std::make_unique<PushAVTransport>(transportOptions, connectionID, mAudioStreamParams, mVideoStreamParams);
 
+    auto transport = std::make_unique<PushAVTransport>(transportOptions, connectionID, mAudioStreamParams, mVideoStreamParams);
+
+    CHIP_ERROR err = transport->ConfigureRecorderSettings(transportOptions, mAudioStreamParams, mVideoStreamParams);
+    if (err != CHIP_NO_ERROR)
+    {
+        ChipLogError(Camera, "PushAvStreamTransportManager, failed to configure recorder settings for Connection: [%u], error: %s",
+                     connectionID, ErrorStr(err));
+        return Status::Failure;
+    }
+    mTransportMap[connectionID] = std::move(transport);
     mTransportMap[connectionID]->SetPushAvStreamTransportServer(mPushAvStreamTransportServer);
     mTransportMap[connectionID]->SetPushAvStreamTransportManager(this);
     mTransportMap[connectionID]->SetFabricIndex(accessingFabricIndex);
@@ -191,6 +214,14 @@ PushAvStreamTransportManager::ModifyPushTransport(const uint16_t connectionID, c
         return Status::NotFound;
     }
 
+    CHIP_ERROR err = mTransportMap[connectionID].get()->ModifyPushTransport(transportOptions);
+    if (err != CHIP_NO_ERROR)
+    {
+        ChipLogError(Camera, "PushAvStreamTransportManager, failed to modify Connection :[%u], error: %s", connectionID,
+                     ErrorStr(err));
+        return Status::Failure;
+    }
+
     uint32_t newTransportBandwidthbps = 0;
     GetBandwidthForStreams(transportOptions.videoStreamID, transportOptions.audioStreamID, newTransportBandwidthbps);
 
@@ -205,7 +236,7 @@ PushAvStreamTransportManager::ModifyPushTransport(const uint16_t connectionID, c
                   connectionID, newTransportBandwidthbps, mTotalUsedBandwidthbps);
 
     mTransportOptionsMap[connectionID] = transportOptions;
-    mTransportMap[connectionID].get()->ModifyPushTransport(transportOptions);
+
     ChipLogProgress(Camera, "PushAvStreamTransportManager, success to modify Connection :[%u]", connectionID);
 
     return Status::Success;
@@ -284,6 +315,27 @@ Protocols::InteractionModel::Status PushAvStreamTransportManager::ManuallyTrigge
     mTransportMap[connectionID]->TriggerTransport(activationReason);
 
     return Status::Success;
+}
+
+bool PushAvStreamTransportManager::IsCMAFInterfaceSupported(CMAFInterfaceEnum cmafInterface) const
+{
+    // CMAF interface 1 and DASH (interface 2) are supported in the current implementation
+    switch (cmafInterface)
+    {
+    case CMAFInterfaceEnum::kInterface1:
+        return true;
+    case CMAFInterfaceEnum::kInterface2DASH:
+        ChipLogDetail(Camera,
+                      "DASH interface enabled - WARNING: This is still provisional and full compliance to CMAF ingest "
+                      "interface-2: DASH may not be available");
+        return true;
+    case CMAFInterfaceEnum::kInterface2HLS:
+        return false;
+    case CMAFInterfaceEnum::kUnknownEnumValue:
+        return false;
+    default:
+        return false;
+    }
 }
 
 void PushAvStreamTransportManager::GetBandwidthForStreams(const Optional<DataModel::Nullable<uint16_t>> & videoStreamId,
@@ -379,6 +431,44 @@ bool PushAvStreamTransportManager::ValidateSegmentDuration(uint16_t segmentDurat
             {
                 return true;
             }
+            break;
+        }
+    }
+
+    return false;
+}
+
+bool PushAvStreamTransportManager::ValidateMaxPreRollLength(uint16_t maxPreRollLength,
+                                                            const DataModel::Nullable<uint16_t> & videoStreamId)
+{
+    // If the video stream ID is null, log error and return false
+    if (videoStreamId.IsNull())
+    {
+        ChipLogError(Camera, "MaxPreRollLength validation requested with null video stream ID");
+        return false;
+    }
+
+    auto & videoStreams = mCameraDevice->GetCameraAVStreamMgmtDelegate().GetAllocatedVideoStreams();
+
+    if (videoStreams.empty())
+    {
+        ChipLogError(Camera, "Attempt to validate max pre-roll length when no video streams are allocated.");
+        return false;
+    }
+
+    for (const VideoStreamStruct & stream : videoStreams)
+    {
+        if (stream.videoStreamID == videoStreamId.Value())
+        {
+            // If non-zero, Max pre roll length must be greater than or equal to key frame interval
+            if (maxPreRollLength >= stream.keyFrameInterval)
+            {
+                return true;
+            }
+            ChipLogError(Camera,
+                         "Max pre-roll length validation failed for video stream id [%u], max pre-roll length [%u], key frame "
+                         "interval [%u] ",
+                         stream.videoStreamID, maxPreRollLength, stream.keyFrameInterval);
             break;
         }
     }
@@ -566,7 +656,7 @@ void PushAvStreamTransportManager::HandleZoneTrigger(uint16_t zoneId)
 
         if (mTransportOptionsMap[connectionId].triggerOptions.triggerType == TransportTriggerTypeEnum::kMotion)
         {
-            pavst.second->TriggerTransport(TriggerActivationReasonEnum::kAutomation, zoneId, 10);
+            pavst.second->TriggerTransport(TriggerActivationReasonEnum::kAutomation, zoneId, 10, true);
         }
     }
 }
@@ -599,7 +689,7 @@ void PushAvStreamTransportManager::SetTLSCerts(Tls::CertificateTable::BufferedCl
         }
         else
         {
-            ChipLogProgress(Camera, "Intermediate certificates fetched and stored. Size: %ld", mBufferIntermediateCerts.size());
+            ChipLogProgress(Camera, "Intermediate certificates fetched and stored. Size: %zu", mBufferIntermediateCerts.size());
         }
     }
     else
@@ -610,7 +700,7 @@ void PushAvStreamTransportManager::SetTLSCerts(Tls::CertificateTable::BufferedCl
     const ByteSpan rawKeySpan = clientCertEntry.mCertWithKey.key.Span();
     if (rawKeySpan.size() != Crypto::kP256_PublicKey_Length + Crypto::kP256_PrivateKey_Length)
     {
-        ChipLogError(Camera, "Raw key pair has incorrect size: %ld (expected %ld)", rawKeySpan.size(),
+        ChipLogError(Camera, "Raw key pair has incorrect size: %zu (expected %zu)", rawKeySpan.size(),
                      static_cast<size_t>(Crypto::kP256_PublicKey_Length + Crypto::kP256_PrivateKey_Length));
         return;
     }
