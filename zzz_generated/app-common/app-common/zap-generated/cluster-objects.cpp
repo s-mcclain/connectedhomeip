@@ -403,6 +403,10 @@
 #include <clusters/PressureMeasurement/Commands.ipp>
 #include <clusters/PressureMeasurement/Events.ipp>
 #include <clusters/PressureMeasurement/Structs.ipp>
+#include <clusters/ProximityRanging/Attributes.ipp>
+#include <clusters/ProximityRanging/Commands.ipp>
+#include <clusters/ProximityRanging/Events.ipp>
+#include <clusters/ProximityRanging/Structs.ipp>
 #include <clusters/ProxyConfiguration/Attributes.ipp>
 #include <clusters/ProxyConfiguration/Commands.ipp>
 #include <clusters/ProxyConfiguration/Events.ipp>
@@ -1223,6 +1227,13 @@ bool CommandIsFabricScoped(ClusterId aCluster, CommandId aCommand)
         }
     }
     case Clusters::ColorControl::Id: {
+        switch (aCommand)
+        {
+        default:
+            return false;
+        }
+    }
+    case Clusters::ProximityRanging::Id: {
         switch (aCommand)
         {
         default:

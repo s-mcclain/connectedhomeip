@@ -4729,6 +4729,19 @@ static id _Nullable DecodeEventPayloadForAmbientContextSensingCluster(EventId aE
     *aError = CHIP_ERROR_IM_MALFORMED_EVENT_PATH_IB;
     return nil;
 }
+static id _Nullable DecodeEventPayloadForProximityRangingCluster(EventId aEventId, TLV::TLVReader & aReader, CHIP_ERROR * aError)
+{
+    using namespace Clusters::ProximityRanging;
+    switch (aEventId) {
+    default: {
+        // Not a known ProximityRanging event.
+        break;
+    }
+    }
+
+    *aError = CHIP_ERROR_IM_MALFORMED_EVENT_PATH_IB;
+    return nil;
+}
 static id _Nullable DecodeEventPayloadForWiFiNetworkManagementCluster(EventId aEventId, TLV::TLVReader & aReader, CHIP_ERROR * aError)
 {
     using namespace Clusters::WiFiNetworkManagement;
@@ -5996,6 +6009,9 @@ id _Nullable MTRDecodeEventPayload(const ConcreteEventPath & aPath, TLV::TLVRead
     }
     case Clusters::AmbientContextSensing::Id: {
         return DecodeEventPayloadForAmbientContextSensingCluster(aPath.mEventId, aReader, aError);
+    }
+    case Clusters::ProximityRanging::Id: {
+        return DecodeEventPayloadForProximityRangingCluster(aPath.mEventId, aReader, aError);
     }
     case Clusters::WiFiNetworkManagement::Id: {
         return DecodeEventPayloadForWiFiNetworkManagementCluster(aPath.mEventId, aReader, aError);

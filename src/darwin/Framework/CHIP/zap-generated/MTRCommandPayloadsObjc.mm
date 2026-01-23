@@ -26928,6 +26928,536 @@ static void LogAndConvertDecodingError(CHIP_ERROR err, NSError * __autoreleasing
 }
 @end
 
+@implementation MTRProximityRangingClusterStartRangingRequestParams
+- (instancetype)init
+{
+    if (self = [super init]) {
+
+        _technology = @(0);
+
+        _wiFiRangingDeviceRoleConfig = nil;
+
+        _bleRangingDeviceRoleConfig = nil;
+
+        _btChannelSoundingDeviceRoleConfig = nil;
+
+        _uwbRangingDeviceRoleConfig = nil;
+
+        _frequencyBand = nil;
+
+        _bandwidth = nil;
+
+        _securityMode = nil;
+
+        _trigger = [MTRProximityRangingClusterRangingTriggerConditionStruct new];
+
+        _reportingCondition = nil;
+        _timedInvokeTimeoutMs = nil;
+        _serverSideProcessingTimeout = nil;
+    }
+    return self;
+}
+
+- (id)copyWithZone:(NSZone * _Nullable)zone;
+{
+    auto other = [[MTRProximityRangingClusterStartRangingRequestParams alloc] init];
+
+    other.technology = self.technology;
+    other.wiFiRangingDeviceRoleConfig = self.wiFiRangingDeviceRoleConfig;
+    other.bleRangingDeviceRoleConfig = self.bleRangingDeviceRoleConfig;
+    other.btChannelSoundingDeviceRoleConfig = self.btChannelSoundingDeviceRoleConfig;
+    other.uwbRangingDeviceRoleConfig = self.uwbRangingDeviceRoleConfig;
+    other.frequencyBand = self.frequencyBand;
+    other.bandwidth = self.bandwidth;
+    other.securityMode = self.securityMode;
+    other.trigger = self.trigger;
+    other.reportingCondition = self.reportingCondition;
+    other.timedInvokeTimeoutMs = self.timedInvokeTimeoutMs;
+    other.serverSideProcessingTimeout = self.serverSideProcessingTimeout;
+
+    return other;
+}
+
+- (NSString *)description
+{
+    NSString * descriptionString = [NSString stringWithFormat:@"<%@: technology:%@; wiFiRangingDeviceRoleConfig:%@; bleRangingDeviceRoleConfig:%@; btChannelSoundingDeviceRoleConfig:%@; uwbRangingDeviceRoleConfig:%@; frequencyBand:%@; bandwidth:%@; securityMode:%@; trigger:%@; reportingCondition:%@; >", NSStringFromClass([self class]), _technology, _wiFiRangingDeviceRoleConfig, _bleRangingDeviceRoleConfig, _btChannelSoundingDeviceRoleConfig, _uwbRangingDeviceRoleConfig, _frequencyBand, _bandwidth, _securityMode, _trigger, _reportingCondition];
+    return descriptionString;
+}
+
+@end
+
+@implementation MTRProximityRangingClusterStartRangingRequestParams (InternalMethods)
+
+- (CHIP_ERROR)_encodeToTLVReader:(chip::System::PacketBufferTLVReader &)reader
+{
+    chip::app::Clusters::ProximityRanging::Commands::StartRangingRequest::Type encodableStruct;
+    ListFreer listFreer;
+    {
+        encodableStruct.technology = static_cast<std::remove_reference_t<decltype(encodableStruct.technology)>>(self.technology.unsignedCharValue);
+    }
+    {
+        if (self.wiFiRangingDeviceRoleConfig != nil) {
+            auto & definedValue_0 = encodableStruct.wiFiRangingDeviceRoleConfig.Emplace();
+            definedValue_0.role = static_cast<std::remove_reference_t<decltype(definedValue_0.role)>>(self.wiFiRangingDeviceRoleConfig.role.unsignedCharValue);
+            definedValue_0.targetPeerDevIK = AsByteSpan(self.wiFiRangingDeviceRoleConfig.targetPeerDevIK);
+            if (self.wiFiRangingDeviceRoleConfig.pmk != nil) {
+                auto & definedValue_2 = definedValue_0.pmk.Emplace();
+                definedValue_2 = AsByteSpan(self.wiFiRangingDeviceRoleConfig.pmk);
+            }
+        }
+    }
+    {
+        if (self.bleRangingDeviceRoleConfig != nil) {
+            auto & definedValue_0 = encodableStruct.BLERangingDeviceRoleConfig.Emplace();
+            definedValue_0.role = static_cast<std::remove_reference_t<decltype(definedValue_0.role)>>(self.bleRangingDeviceRoleConfig.role.unsignedCharValue);
+            definedValue_0.peerBLEDeviceID = self.bleRangingDeviceRoleConfig.peerBLEDeviceID.unsignedLongLongValue;
+            if (self.bleRangingDeviceRoleConfig.pmk != nil) {
+                auto & definedValue_2 = definedValue_0.pmk.Emplace();
+                definedValue_2 = AsByteSpan(self.bleRangingDeviceRoleConfig.pmk);
+            }
+        }
+    }
+    {
+        if (self.btChannelSoundingDeviceRoleConfig != nil) {
+            auto & definedValue_0 = encodableStruct.BTChannelSoundingDeviceRoleConfig.Emplace();
+            definedValue_0.role = static_cast<std::remove_reference_t<decltype(definedValue_0.role)>>(self.btChannelSoundingDeviceRoleConfig.role.unsignedCharValue);
+            definedValue_0.targetPeerDevIK = AsByteSpan(self.btChannelSoundingDeviceRoleConfig.targetPeerDevIK);
+            if (self.btChannelSoundingDeviceRoleConfig.pmk != nil) {
+                auto & definedValue_2 = definedValue_0.pmk.Emplace();
+                definedValue_2 = AsByteSpan(self.btChannelSoundingDeviceRoleConfig.pmk);
+            }
+        }
+    }
+    {
+        if (self.uwbRangingDeviceRoleConfig != nil) {
+            auto & definedValue_0 = encodableStruct.UWBRangingDeviceRoleConfig.Emplace();
+            definedValue_0.role = static_cast<std::remove_reference_t<decltype(definedValue_0.role)>>(self.uwbRangingDeviceRoleConfig.role.unsignedCharValue);
+            definedValue_0.targetPeerDevIK = AsByteSpan(self.uwbRangingDeviceRoleConfig.targetPeerDevIK);
+            if (self.uwbRangingDeviceRoleConfig.pasnCredential != nil) {
+                auto & definedValue_2 = definedValue_0.PASNCredential.Emplace();
+                definedValue_2 = AsByteSpan(self.uwbRangingDeviceRoleConfig.pasnCredential);
+            }
+        }
+    }
+    {
+        if (self.frequencyBand != nil) {
+            auto & definedValue_0 = encodableStruct.frequencyBand.Emplace();
+            definedValue_0 = static_cast<std::remove_reference_t<decltype(definedValue_0)>>(self.frequencyBand.unsignedCharValue);
+        }
+    }
+    {
+        if (self.bandwidth != nil) {
+            auto & definedValue_0 = encodableStruct.bandwidth.Emplace();
+            definedValue_0 = static_cast<std::remove_reference_t<decltype(definedValue_0)>>(self.bandwidth.unsignedCharValue);
+        }
+    }
+    {
+        if (self.securityMode != nil) {
+            auto & definedValue_0 = encodableStruct.securityMode.Emplace();
+            definedValue_0 = static_cast<std::remove_reference_t<decltype(definedValue_0)>>(self.securityMode.unsignedCharValue);
+        }
+    }
+    {
+        encodableStruct.trigger.startTimeDelay = self.trigger.startTimeDelay.unsignedIntValue;
+        if (self.trigger.endTimeDelay != nil) {
+            auto & definedValue_1 = encodableStruct.trigger.endTimeDelay.Emplace();
+            definedValue_1 = self.trigger.endTimeDelay.unsignedIntValue;
+        }
+        if (self.trigger.rangingInstanceInterval != nil) {
+            auto & definedValue_1 = encodableStruct.trigger.rangingInstanceInterval.Emplace();
+            definedValue_1 = self.trigger.rangingInstanceInterval.unsignedIntValue;
+        }
+    }
+    {
+        if (self.reportingCondition != nil) {
+            auto & definedValue_0 = encodableStruct.reportingCondition.Emplace();
+            if (self.reportingCondition.minDistanceCondition != nil) {
+                auto & definedValue_2 = definedValue_0.minDistanceCondition.Emplace();
+                definedValue_2 = self.reportingCondition.minDistanceCondition.shortValue;
+            }
+            if (self.reportingCondition.maxDistanceCondition != nil) {
+                auto & definedValue_2 = definedValue_0.maxDistanceCondition.Emplace();
+                definedValue_2 = self.reportingCondition.maxDistanceCondition.shortValue;
+            }
+            if (self.reportingCondition.accuracyCondition != nil) {
+                auto & definedValue_2 = definedValue_0.accuracyCondition.Emplace();
+                definedValue_2 = self.reportingCondition.accuracyCondition.shortValue;
+            }
+            if (self.reportingCondition.startTimePeriod != nil) {
+                auto & definedValue_2 = definedValue_0.startTimePeriod.Emplace();
+                definedValue_2 = self.reportingCondition.startTimePeriod.unsignedIntValue;
+            }
+            if (self.reportingCondition.endTimePeriod != nil) {
+                auto & definedValue_2 = definedValue_0.endTimePeriod.Emplace();
+                definedValue_2 = self.reportingCondition.endTimePeriod.unsignedIntValue;
+            }
+        }
+    }
+
+    auto buffer = chip::System::PacketBufferHandle::New(chip::System::PacketBuffer::kMaxSizeWithoutReserve, 0);
+    if (buffer.IsNull()) {
+        return CHIP_ERROR_NO_MEMORY;
+    }
+
+    chip::System::PacketBufferTLVWriter writer;
+    // Commands never need chained buffers, since they cannot be chunked.
+    writer.Init(std::move(buffer), /* useChainedBuffers = */ false);
+
+    ReturnErrorOnFailure(chip::app::DataModel::Encode(writer, chip::TLV::AnonymousTag(), encodableStruct));
+
+    ReturnErrorOnFailure(writer.Finalize(&buffer));
+
+    reader.Init(std::move(buffer));
+    return reader.Next(chip::TLV::kTLVType_Structure, chip::TLV::AnonymousTag());
+}
+
+- (NSDictionary<NSString *, id> * _Nullable)_encodeAsDataValue:(NSError * __autoreleasing *)error
+{
+    chip::System::PacketBufferTLVReader reader;
+    CHIP_ERROR err = [self _encodeToTLVReader:reader];
+    if (err != CHIP_NO_ERROR) {
+        if (error) {
+            *error = [MTRError errorForCHIPErrorCode:err];
+        }
+        return nil;
+    }
+
+    auto decodedObj = MTRDecodeDataValueDictionaryFromCHIPTLV(&reader);
+    if (decodedObj == nil) {
+        if (error) {
+            *error = [MTRError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE];
+        }
+    }
+    return decodedObj;
+}
+@end
+
+@implementation MTRProximityRangingClusterStartRangingResponseParams
+- (instancetype)init
+{
+    if (self = [super init]) {
+
+        _sessionID = @(0);
+
+        _targetWiFiDevIK = nil;
+
+        _targetBLEDeviceId = nil;
+
+        _resultCode = @(0);
+    }
+    return self;
+}
+
+- (id)copyWithZone:(NSZone * _Nullable)zone;
+{
+    auto other = [[MTRProximityRangingClusterStartRangingResponseParams alloc] init];
+
+    other.sessionID = self.sessionID;
+    other.targetWiFiDevIK = self.targetWiFiDevIK;
+    other.targetBLEDeviceId = self.targetBLEDeviceId;
+    other.resultCode = self.resultCode;
+
+    return other;
+}
+
+- (NSString *)description
+{
+    NSString * descriptionString = [NSString stringWithFormat:@"<%@: sessionID:%@; targetWiFiDevIK:%@; targetBLEDeviceId:%@; resultCode:%@; >", NSStringFromClass([self class]), _sessionID, [_targetWiFiDevIK base64EncodedStringWithOptions:0], _targetBLEDeviceId, _resultCode];
+    return descriptionString;
+}
+
+- (nullable instancetype)initWithResponseValue:(NSDictionary<NSString *, id> *)responseValue
+                                         error:(NSError * __autoreleasing *)error
+{
+    if (!(self = [super init])) {
+        return nil;
+    }
+
+    using DecodableType = chip::app::Clusters::ProximityRanging::Commands::StartRangingResponse::DecodableType;
+    chip::System::PacketBufferHandle buffer = [MTRBaseDevice _responseDataForCommand:responseValue
+                                                                           clusterID:DecodableType::GetClusterId()
+                                                                           commandID:DecodableType::GetCommandId()
+                                                                               error:error];
+    if (buffer.IsNull()) {
+        return nil;
+    }
+
+    chip::TLV::TLVReader reader;
+    reader.Init(buffer->Start(), buffer->DataLength());
+
+    CHIP_ERROR err = reader.Next(chip::TLV::AnonymousTag());
+    if (err == CHIP_NO_ERROR) {
+        DecodableType decodedStruct;
+        err = chip::app::DataModel::Decode(reader, decodedStruct);
+        if (err == CHIP_NO_ERROR) {
+            err = [self _setFieldsFromDecodableStruct:decodedStruct];
+            if (err == CHIP_NO_ERROR) {
+                return self;
+            }
+        }
+    }
+
+    LogAndConvertDecodingError(err, error);
+    return nil;
+}
+
+@end
+
+@implementation MTRProximityRangingClusterStartRangingResponseParams (InternalMethods)
+
+- (nullable instancetype)initWithDecodableStruct:(const chip::app::Clusters::ProximityRanging::Commands::StartRangingResponse::DecodableType &)decodableStruct
+{
+    if (!(self = [super init])) {
+        return nil;
+    }
+
+    CHIP_ERROR err = [self _setFieldsFromDecodableStruct:decodableStruct];
+    if (err == CHIP_NO_ERROR) {
+        return self;
+    }
+
+    LogAndConvertDecodingError(err, nil);
+    return nil;
+}
+
+- (CHIP_ERROR)_setFieldsFromDecodableStruct:(const chip::app::Clusters::ProximityRanging::Commands::StartRangingResponse::DecodableType &)decodableStruct
+{
+    {
+        self.sessionID = [NSNumber numberWithUnsignedChar:decodableStruct.sessionID];
+    }
+    {
+        if (decodableStruct.targetWiFiDevIK.HasValue()) {
+            self.targetWiFiDevIK = AsData(decodableStruct.targetWiFiDevIK.Value());
+        } else {
+            self.targetWiFiDevIK = nil;
+        }
+    }
+    {
+        if (decodableStruct.targetBLEDeviceId.HasValue()) {
+            self.targetBLEDeviceId = [NSNumber numberWithUnsignedLongLong:decodableStruct.targetBLEDeviceId.Value()];
+        } else {
+            self.targetBLEDeviceId = nil;
+        }
+    }
+    {
+        self.resultCode = [NSNumber numberWithUnsignedChar:chip::to_underlying(decodableStruct.resultCode)];
+    }
+    return CHIP_NO_ERROR;
+}
+
+@end
+
+@implementation MTRProximityRangingClusterStopRangingRequestParams
+- (instancetype)init
+{
+    if (self = [super init]) {
+
+        _sessionID = @(0);
+        _timedInvokeTimeoutMs = nil;
+        _serverSideProcessingTimeout = nil;
+    }
+    return self;
+}
+
+- (id)copyWithZone:(NSZone * _Nullable)zone;
+{
+    auto other = [[MTRProximityRangingClusterStopRangingRequestParams alloc] init];
+
+    other.sessionID = self.sessionID;
+    other.timedInvokeTimeoutMs = self.timedInvokeTimeoutMs;
+    other.serverSideProcessingTimeout = self.serverSideProcessingTimeout;
+
+    return other;
+}
+
+- (NSString *)description
+{
+    NSString * descriptionString = [NSString stringWithFormat:@"<%@: sessionID:%@; >", NSStringFromClass([self class]), _sessionID];
+    return descriptionString;
+}
+
+@end
+
+@implementation MTRProximityRangingClusterStopRangingRequestParams (InternalMethods)
+
+- (CHIP_ERROR)_encodeToTLVReader:(chip::System::PacketBufferTLVReader &)reader
+{
+    chip::app::Clusters::ProximityRanging::Commands::StopRangingRequest::Type encodableStruct;
+    ListFreer listFreer;
+    {
+        encodableStruct.sessionID = self.sessionID.unsignedCharValue;
+    }
+
+    auto buffer = chip::System::PacketBufferHandle::New(chip::System::PacketBuffer::kMaxSizeWithoutReserve, 0);
+    if (buffer.IsNull()) {
+        return CHIP_ERROR_NO_MEMORY;
+    }
+
+    chip::System::PacketBufferTLVWriter writer;
+    // Commands never need chained buffers, since they cannot be chunked.
+    writer.Init(std::move(buffer), /* useChainedBuffers = */ false);
+
+    ReturnErrorOnFailure(chip::app::DataModel::Encode(writer, chip::TLV::AnonymousTag(), encodableStruct));
+
+    ReturnErrorOnFailure(writer.Finalize(&buffer));
+
+    reader.Init(std::move(buffer));
+    return reader.Next(chip::TLV::kTLVType_Structure, chip::TLV::AnonymousTag());
+}
+
+- (NSDictionary<NSString *, id> * _Nullable)_encodeAsDataValue:(NSError * __autoreleasing *)error
+{
+    chip::System::PacketBufferTLVReader reader;
+    CHIP_ERROR err = [self _encodeToTLVReader:reader];
+    if (err != CHIP_NO_ERROR) {
+        if (error) {
+            *error = [MTRError errorForCHIPErrorCode:err];
+        }
+        return nil;
+    }
+
+    auto decodedObj = MTRDecodeDataValueDictionaryFromCHIPTLV(&reader);
+    if (decodedObj == nil) {
+        if (error) {
+            *error = [MTRError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE];
+        }
+    }
+    return decodedObj;
+}
+@end
+
+@implementation MTRProximityRangingClusterRangingResultParams
+- (instancetype)init
+{
+    if (self = [super init]) {
+
+        _sessionID = @(0);
+
+        _rangingResultData = [MTRProximityRangingClusterRangingMeasurementDataStruct new];
+    }
+    return self;
+}
+
+- (id)copyWithZone:(NSZone * _Nullable)zone;
+{
+    auto other = [[MTRProximityRangingClusterRangingResultParams alloc] init];
+
+    other.sessionID = self.sessionID;
+    other.rangingResultData = self.rangingResultData;
+
+    return other;
+}
+
+- (NSString *)description
+{
+    NSString * descriptionString = [NSString stringWithFormat:@"<%@: sessionID:%@; rangingResultData:%@; >", NSStringFromClass([self class]), _sessionID, _rangingResultData];
+    return descriptionString;
+}
+
+- (nullable instancetype)initWithResponseValue:(NSDictionary<NSString *, id> *)responseValue
+                                         error:(NSError * __autoreleasing *)error
+{
+    if (!(self = [super init])) {
+        return nil;
+    }
+
+    using DecodableType = chip::app::Clusters::ProximityRanging::Commands::RangingResult::DecodableType;
+    chip::System::PacketBufferHandle buffer = [MTRBaseDevice _responseDataForCommand:responseValue
+                                                                           clusterID:DecodableType::GetClusterId()
+                                                                           commandID:DecodableType::GetCommandId()
+                                                                               error:error];
+    if (buffer.IsNull()) {
+        return nil;
+    }
+
+    chip::TLV::TLVReader reader;
+    reader.Init(buffer->Start(), buffer->DataLength());
+
+    CHIP_ERROR err = reader.Next(chip::TLV::AnonymousTag());
+    if (err == CHIP_NO_ERROR) {
+        DecodableType decodedStruct;
+        err = chip::app::DataModel::Decode(reader, decodedStruct);
+        if (err == CHIP_NO_ERROR) {
+            err = [self _setFieldsFromDecodableStruct:decodedStruct];
+            if (err == CHIP_NO_ERROR) {
+                return self;
+            }
+        }
+    }
+
+    LogAndConvertDecodingError(err, error);
+    return nil;
+}
+
+@end
+
+@implementation MTRProximityRangingClusterRangingResultParams (InternalMethods)
+
+- (nullable instancetype)initWithDecodableStruct:(const chip::app::Clusters::ProximityRanging::Commands::RangingResult::DecodableType &)decodableStruct
+{
+    if (!(self = [super init])) {
+        return nil;
+    }
+
+    CHIP_ERROR err = [self _setFieldsFromDecodableStruct:decodableStruct];
+    if (err == CHIP_NO_ERROR) {
+        return self;
+    }
+
+    LogAndConvertDecodingError(err, nil);
+    return nil;
+}
+
+- (CHIP_ERROR)_setFieldsFromDecodableStruct:(const chip::app::Clusters::ProximityRanging::Commands::RangingResult::DecodableType &)decodableStruct
+{
+    {
+        self.sessionID = [NSNumber numberWithUnsignedChar:decodableStruct.sessionID];
+    }
+    {
+        self.rangingResultData = [MTRProximityRangingClusterRangingMeasurementDataStruct new];
+        if (decodableStruct.rangingResultData.wiFiDevIK.HasValue()) {
+            self.rangingResultData.wiFiDevIK = AsData(decodableStruct.rangingResultData.wiFiDevIK.Value());
+        } else {
+            self.rangingResultData.wiFiDevIK = nil;
+        }
+        if (decodableStruct.rangingResultData.BLEDeviceId.HasValue()) {
+            self.rangingResultData.bleDeviceId = [NSNumber numberWithUnsignedLongLong:decodableStruct.rangingResultData.BLEDeviceId.Value()];
+        } else {
+            self.rangingResultData.bleDeviceId = nil;
+        }
+        self.rangingResultData.timeOfMeasurement = [NSNumber numberWithUnsignedInt:decodableStruct.rangingResultData.timeOfMeasurement];
+        self.rangingResultData.distance = [NSNumber numberWithShort:decodableStruct.rangingResultData.distance];
+        if (decodableStruct.rangingResultData.accuracy.HasValue()) {
+            self.rangingResultData.accuracy = [NSNumber numberWithUnsignedShort:decodableStruct.rangingResultData.accuracy.Value()];
+        } else {
+            self.rangingResultData.accuracy = nil;
+        }
+        if (decodableStruct.rangingResultData.rdr.HasValue()) {
+            self.rangingResultData.rdr = [MTRProximityRangingClusterRDRStruct new];
+            self.rangingResultData.rdr.azimuth = [NSNumber numberWithShort:decodableStruct.rangingResultData.rdr.Value().azimuth];
+            self.rangingResultData.rdr.elevation = [NSNumber numberWithChar:decodableStruct.rangingResultData.rdr.Value().elevation];
+            self.rangingResultData.rdr.azimuthAccuracy = [NSNumber numberWithUnsignedChar:decodableStruct.rangingResultData.rdr.Value().azimuthAccuracy];
+            self.rangingResultData.rdr.elevationAccuracy = [NSNumber numberWithUnsignedChar:decodableStruct.rangingResultData.rdr.Value().elevationAccuracy];
+            self.rangingResultData.rdr.reference = [NSNumber numberWithChar:decodableStruct.rangingResultData.rdr.Value().reference];
+        } else {
+            self.rangingResultData.rdr = nil;
+        }
+        if (decodableStruct.rangingResultData.rssi.HasValue()) {
+            self.rangingResultData.rssi = [NSNumber numberWithChar:decodableStruct.rangingResultData.rssi.Value()];
+        } else {
+            self.rangingResultData.rssi = nil;
+        }
+        if (decodableStruct.rangingResultData.txPower.HasValue()) {
+            self.rangingResultData.txPower = [NSNumber numberWithChar:decodableStruct.rangingResultData.txPower.Value()];
+        } else {
+            self.rangingResultData.txPower = nil;
+        }
+    }
+    return CHIP_NO_ERROR;
+}
+
+@end
+
 @implementation MTRWiFiNetworkManagementClusterNetworkPassphraseRequestParams
 - (instancetype)init
 {

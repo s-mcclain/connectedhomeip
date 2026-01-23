@@ -16649,6 +16649,71 @@ static id _Nullable DecodeAttributeValueForAmbientContextSensingCluster(Attribut
     *aError = CHIP_ERROR_IM_MALFORMED_ATTRIBUTE_PATH_IB;
     return nil;
 }
+static id _Nullable DecodeAttributeValueForProximityRangingCluster(AttributeId aAttributeId, TLV::TLVReader & aReader, CHIP_ERROR * aError)
+{
+    using namespace Clusters::ProximityRanging;
+    switch (aAttributeId) {
+    case Attributes::RangingCapabilities::Id: {
+        using TypeInfo = Attributes::RangingCapabilities::TypeInfo;
+        TypeInfo::DecodableType cppValue;
+        *aError = DataModel::Decode(aReader, cppValue);
+        if (*aError != CHIP_NO_ERROR) {
+            return nil;
+        }
+        NSArray * _Nonnull value;
+        { // Scope for our temporary variables
+            auto * array_0 = [NSMutableArray new];
+            auto iter_0 = cppValue.begin();
+            while (iter_0.Next()) {
+                auto & entry_0 = iter_0.GetValue();
+                MTRProximityRangingClusterRangingCapabilitiesStruct * newElement_0;
+                newElement_0 = [MTRProximityRangingClusterRangingCapabilitiesStruct new];
+                newElement_0.technology = [NSNumber numberWithUnsignedChar:chip::to_underlying(entry_0.technology)];
+                newElement_0.frequencyBand = [NSNumber numberWithUnsignedChar:chip::to_underlying(entry_0.frequencyBand)];
+                newElement_0.mobilitySupport = [NSNumber numberWithBool:entry_0.mobilitySupport];
+                newElement_0.periodicRangingSupport = [NSNumber numberWithBool:entry_0.periodicRangingSupport];
+                [array_0 addObject:newElement_0];
+            }
+            CHIP_ERROR err = iter_0.GetStatus();
+            if (err != CHIP_NO_ERROR) {
+                *aError = err;
+                return nil;
+            }
+            value = array_0;
+        }
+        return value;
+    }
+    case Attributes::WiFiDevIK::Id: {
+        using TypeInfo = Attributes::WiFiDevIK::TypeInfo;
+        TypeInfo::DecodableType cppValue;
+        *aError = DataModel::Decode(aReader, cppValue);
+        if (*aError != CHIP_NO_ERROR) {
+            return nil;
+        }
+        NSData * _Nonnull value;
+        value = AsData(cppValue);
+        return value;
+    }
+    case Attributes::BLEDeviceId::Id: {
+        using TypeInfo = Attributes::BLEDeviceId::TypeInfo;
+        TypeInfo::DecodableType cppValue;
+        *aError = DataModel::Decode(aReader, cppValue);
+        if (*aError != CHIP_NO_ERROR) {
+            return nil;
+        }
+        NSNumber * _Nonnull value;
+        value = [NSNumber numberWithUnsignedLongLong:cppValue];
+        return value;
+    }
+    default: {
+        // Not a known ProximityRanging attribute.
+        break;
+    }
+    }
+
+    *aError = CHIP_ERROR_IM_MALFORMED_ATTRIBUTE_PATH_IB;
+    return nil;
+}
 static id _Nullable DecodeAttributeValueForWiFiNetworkManagementCluster(AttributeId aAttributeId, TLV::TLVReader & aReader, CHIP_ERROR * aError)
 {
     using namespace Clusters::WiFiNetworkManagement;
@@ -23770,6 +23835,9 @@ id _Nullable MTRDecodeAttributeValue(const ConcreteAttributePath & aPath, TLV::T
     }
     case Clusters::AmbientContextSensing::Id: {
         return DecodeAttributeValueForAmbientContextSensingCluster(aPath.mAttributeId, aReader, aError);
+    }
+    case Clusters::ProximityRanging::Id: {
+        return DecodeAttributeValueForProximityRangingCluster(aPath.mAttributeId, aReader, aError);
     }
     case Clusters::WiFiNetworkManagement::Id: {
         return DecodeAttributeValueForWiFiNetworkManagementCluster(aPath.mAttributeId, aReader, aError);

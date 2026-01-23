@@ -115,6 +115,7 @@
 #include <clusters/PowerSourceConfiguration/CommandIds.h>
 #include <clusters/PowerTopology/CommandIds.h>
 #include <clusters/PressureMeasurement/CommandIds.h>
+#include <clusters/ProximityRanging/CommandIds.h>
 #include <clusters/ProxyConfiguration/CommandIds.h>
 #include <clusters/ProxyDiscovery/CommandIds.h>
 #include <clusters/ProxyValid/CommandIds.h>

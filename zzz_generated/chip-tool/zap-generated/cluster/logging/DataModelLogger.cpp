@@ -4833,6 +4833,391 @@ DataModelLogger::LogValue(const char * label, size_t indent,
     return CHIP_NO_ERROR;
 }
 
+CHIP_ERROR DataModelLogger::LogValue(const char * label, size_t indent,
+                                     const chip::app::Clusters::ProximityRanging::Structs::RDRStruct::DecodableType & value)
+{
+    DataModelLogger::LogString(label, indent, "{");
+    {
+        CHIP_ERROR err = LogValue("Azimuth", indent + 1, value.azimuth);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'Azimuth'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("Elevation", indent + 1, value.elevation);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'Elevation'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("AzimuthAccuracy", indent + 1, value.azimuthAccuracy);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'AzimuthAccuracy'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("ElevationAccuracy", indent + 1, value.elevationAccuracy);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'ElevationAccuracy'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("Reference", indent + 1, value.reference);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'Reference'");
+            return err;
+        }
+    }
+    DataModelLogger::LogString(indent, "}");
+
+    return CHIP_NO_ERROR;
+}
+
+CHIP_ERROR
+DataModelLogger::LogValue(const char * label, size_t indent,
+                          const chip::app::Clusters::ProximityRanging::Structs::RangingMeasurementDataStruct::DecodableType & value)
+{
+    DataModelLogger::LogString(label, indent, "{");
+    {
+        CHIP_ERROR err = LogValue("WiFiDevIK", indent + 1, value.wiFiDevIK);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'WiFiDevIK'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("BLEDeviceId", indent + 1, value.BLEDeviceId);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'BLEDeviceId'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("TimeOfMeasurement", indent + 1, value.timeOfMeasurement);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'TimeOfMeasurement'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("Distance", indent + 1, value.distance);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'Distance'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("Accuracy", indent + 1, value.accuracy);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'Accuracy'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("Rdr", indent + 1, value.rdr);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'Rdr'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("Rssi", indent + 1, value.rssi);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'Rssi'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("TxPower", indent + 1, value.txPower);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'TxPower'");
+            return err;
+        }
+    }
+    DataModelLogger::LogString(indent, "}");
+
+    return CHIP_NO_ERROR;
+}
+
+CHIP_ERROR DataModelLogger::LogValue(
+    const char * label, size_t indent,
+    const chip::app::Clusters::ProximityRanging::Structs::BLERangingDeviceRoleConfigStruct::DecodableType & value)
+{
+    DataModelLogger::LogString(label, indent, "{");
+    {
+        CHIP_ERROR err = LogValue("Role", indent + 1, value.role);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'Role'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("PeerBLEDeviceID", indent + 1, value.peerBLEDeviceID);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'PeerBLEDeviceID'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("Pmk", indent + 1, value.pmk);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'Pmk'");
+            return err;
+        }
+    }
+    DataModelLogger::LogString(indent, "}");
+
+    return CHIP_NO_ERROR;
+}
+
+CHIP_ERROR DataModelLogger::LogValue(
+    const char * label, size_t indent,
+    const chip::app::Clusters::ProximityRanging::Structs::BTChannelSoundingDeviceRoleConfigStruct::DecodableType & value)
+{
+    DataModelLogger::LogString(label, indent, "{");
+    {
+        CHIP_ERROR err = LogValue("Role", indent + 1, value.role);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'Role'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("TargetPeerDevIK", indent + 1, value.targetPeerDevIK);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'TargetPeerDevIK'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("Pmk", indent + 1, value.pmk);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'Pmk'");
+            return err;
+        }
+    }
+    DataModelLogger::LogString(indent, "}");
+
+    return CHIP_NO_ERROR;
+}
+
+CHIP_ERROR
+DataModelLogger::LogValue(const char * label, size_t indent,
+                          const chip::app::Clusters::ProximityRanging::Structs::RangingCapabilitiesStruct::DecodableType & value)
+{
+    DataModelLogger::LogString(label, indent, "{");
+    {
+        CHIP_ERROR err = LogValue("Technology", indent + 1, value.technology);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'Technology'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("FrequencyBand", indent + 1, value.frequencyBand);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'FrequencyBand'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("MobilitySupport", indent + 1, value.mobilitySupport);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'MobilitySupport'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("PeriodicRangingSupport", indent + 1, value.periodicRangingSupport);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'PeriodicRangingSupport'");
+            return err;
+        }
+    }
+    DataModelLogger::LogString(indent, "}");
+
+    return CHIP_NO_ERROR;
+}
+
+CHIP_ERROR DataModelLogger::LogValue(
+    const char * label, size_t indent,
+    const chip::app::Clusters::ProximityRanging::Structs::RangingTriggerConditionStruct::DecodableType & value)
+{
+    DataModelLogger::LogString(label, indent, "{");
+    {
+        CHIP_ERROR err = LogValue("StartTimeDelay", indent + 1, value.startTimeDelay);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'StartTimeDelay'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("EndTimeDelay", indent + 1, value.endTimeDelay);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'EndTimeDelay'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("RangingInstanceInterval", indent + 1, value.rangingInstanceInterval);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'RangingInstanceInterval'");
+            return err;
+        }
+    }
+    DataModelLogger::LogString(indent, "}");
+
+    return CHIP_NO_ERROR;
+}
+
+CHIP_ERROR
+DataModelLogger::LogValue(const char * label, size_t indent,
+                          const chip::app::Clusters::ProximityRanging::Structs::ReportingConditionStruct::DecodableType & value)
+{
+    DataModelLogger::LogString(label, indent, "{");
+    {
+        CHIP_ERROR err = LogValue("MinDistanceCondition", indent + 1, value.minDistanceCondition);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'MinDistanceCondition'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("MaxDistanceCondition", indent + 1, value.maxDistanceCondition);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'MaxDistanceCondition'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("AccuracyCondition", indent + 1, value.accuracyCondition);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'AccuracyCondition'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("StartTimePeriod", indent + 1, value.startTimePeriod);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'StartTimePeriod'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("EndTimePeriod", indent + 1, value.endTimePeriod);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'EndTimePeriod'");
+            return err;
+        }
+    }
+    DataModelLogger::LogString(indent, "}");
+
+    return CHIP_NO_ERROR;
+}
+
+CHIP_ERROR DataModelLogger::LogValue(
+    const char * label, size_t indent,
+    const chip::app::Clusters::ProximityRanging::Structs::UWBRangingDeviceRoleConfigStruct::DecodableType & value)
+{
+    DataModelLogger::LogString(label, indent, "{");
+    {
+        CHIP_ERROR err = LogValue("Role", indent + 1, value.role);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'Role'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("TargetPeerDevIK", indent + 1, value.targetPeerDevIK);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'TargetPeerDevIK'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("PASNCredential", indent + 1, value.PASNCredential);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'PASNCredential'");
+            return err;
+        }
+    }
+    DataModelLogger::LogString(indent, "}");
+
+    return CHIP_NO_ERROR;
+}
+
+CHIP_ERROR DataModelLogger::LogValue(
+    const char * label, size_t indent,
+    const chip::app::Clusters::ProximityRanging::Structs::WiFiRangingDeviceRoleConfigStruct::DecodableType & value)
+{
+    DataModelLogger::LogString(label, indent, "{");
+    {
+        CHIP_ERROR err = LogValue("Role", indent + 1, value.role);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'Role'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("TargetPeerDevIK", indent + 1, value.targetPeerDevIK);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'TargetPeerDevIK'");
+            return err;
+        }
+    }
+    {
+        CHIP_ERROR err = LogValue("Pmk", indent + 1, value.pmk);
+        if (err != CHIP_NO_ERROR)
+        {
+            DataModelLogger::LogString(indent + 1, "Struct truncated due to invalid value for 'Pmk'");
+            return err;
+        }
+    }
+    DataModelLogger::LogString(indent, "}");
+
+    return CHIP_NO_ERROR;
+}
+
 CHIP_ERROR
 DataModelLogger::LogValue(const char * label, size_t indent,
                           const chip::app::Clusters::ThreadNetworkDirectory::Structs::ThreadNetworkStruct::DecodableType & value)
@@ -12414,6 +12799,26 @@ CHIP_ERROR DataModelLogger::LogValue(const char * label, size_t indent,
     ReturnErrorOnFailure(DataModelLogger::LogValue("statusCode", indent + 1, value.statusCode));
     ReturnErrorOnFailure(DataModelLogger::LogValue("attributeStatus", indent + 1, value.attributeStatus));
     ReturnErrorOnFailure(DataModelLogger::LogValue("timeout", indent + 1, value.timeout));
+    DataModelLogger::LogString(indent, "}");
+    return CHIP_NO_ERROR;
+}
+CHIP_ERROR DataModelLogger::LogValue(const char * label, size_t indent,
+                                     const ProximityRanging::Commands::StartRangingResponse::DecodableType & value)
+{
+    DataModelLogger::LogString(label, indent, "{");
+    ReturnErrorOnFailure(DataModelLogger::LogValue("sessionID", indent + 1, value.sessionID));
+    ReturnErrorOnFailure(DataModelLogger::LogValue("targetWiFiDevIK", indent + 1, value.targetWiFiDevIK));
+    ReturnErrorOnFailure(DataModelLogger::LogValue("targetBLEDeviceId", indent + 1, value.targetBLEDeviceId));
+    ReturnErrorOnFailure(DataModelLogger::LogValue("resultCode", indent + 1, value.resultCode));
+    DataModelLogger::LogString(indent, "}");
+    return CHIP_NO_ERROR;
+}
+CHIP_ERROR DataModelLogger::LogValue(const char * label, size_t indent,
+                                     const ProximityRanging::Commands::RangingResult::DecodableType & value)
+{
+    DataModelLogger::LogString(label, indent, "{");
+    ReturnErrorOnFailure(DataModelLogger::LogValue("sessionID", indent + 1, value.sessionID));
+    ReturnErrorOnFailure(DataModelLogger::LogValue("rangingResultData", indent + 1, value.rangingResultData));
     DataModelLogger::LogString(indent, "}");
     return CHIP_NO_ERROR;
 }
@@ -20976,6 +21381,54 @@ CHIP_ERROR DataModelLogger::LogAttribute(const chip::app::ConcreteDataAttributeP
         }
         break;
     }
+    case ProximityRanging::Id: {
+        switch (path.mAttributeId)
+        {
+        case ProximityRanging::Attributes::RangingCapabilities::Id: {
+            chip::app::DataModel::DecodableList<
+                chip::app::Clusters::ProximityRanging::Structs::RangingCapabilitiesStruct::DecodableType>
+                value;
+            ReturnErrorOnFailure(chip::app::DataModel::Decode(*data, value));
+            return DataModelLogger::LogValue("RangingCapabilities", 1, value);
+        }
+        case ProximityRanging::Attributes::WiFiDevIK::Id: {
+            chip::ByteSpan value;
+            ReturnErrorOnFailure(chip::app::DataModel::Decode(*data, value));
+            return DataModelLogger::LogValue("WiFiDevIK", 1, value);
+        }
+        case ProximityRanging::Attributes::BLEDeviceId::Id: {
+            uint64_t value;
+            ReturnErrorOnFailure(chip::app::DataModel::Decode(*data, value));
+            return DataModelLogger::LogValue("BLEDeviceId", 1, value);
+        }
+        case ProximityRanging::Attributes::GeneratedCommandList::Id: {
+            chip::app::DataModel::DecodableList<chip::CommandId> value;
+            ReturnErrorOnFailure(chip::app::DataModel::Decode(*data, value));
+            return DataModelLogger::LogGeneratedCommandId("GeneratedCommandList", 1, value, ProximityRanging::Id);
+        }
+        case ProximityRanging::Attributes::AcceptedCommandList::Id: {
+            chip::app::DataModel::DecodableList<chip::CommandId> value;
+            ReturnErrorOnFailure(chip::app::DataModel::Decode(*data, value));
+            return DataModelLogger::LogAcceptedCommandId("AcceptedCommandList", 1, value, ProximityRanging::Id);
+        }
+        case ProximityRanging::Attributes::AttributeList::Id: {
+            chip::app::DataModel::DecodableList<chip::AttributeId> value;
+            ReturnErrorOnFailure(chip::app::DataModel::Decode(*data, value));
+            return DataModelLogger::LogAttributeId("AttributeList", 1, value, ProximityRanging::Id);
+        }
+        case ProximityRanging::Attributes::FeatureMap::Id: {
+            uint32_t value;
+            ReturnErrorOnFailure(chip::app::DataModel::Decode(*data, value));
+            return DataModelLogger::LogValue("FeatureMap", 1, value);
+        }
+        case ProximityRanging::Attributes::ClusterRevision::Id: {
+            uint16_t value;
+            ReturnErrorOnFailure(chip::app::DataModel::Decode(*data, value));
+            return DataModelLogger::LogValue("ClusterRevision", 1, value);
+        }
+        }
+        break;
+    }
     case WiFiNetworkManagement::Id: {
         switch (path.mAttributeId)
         {
@@ -23996,6 +24449,22 @@ CHIP_ERROR DataModelLogger::LogCommand(const chip::app::ConcreteCommandPath & pa
             Thermostat::Commands::AtomicResponse::DecodableType value;
             ReturnErrorOnFailure(chip::app::DataModel::Decode(*data, value));
             return DataModelLogger::LogValue("AtomicResponse", 1, value);
+        }
+        }
+        break;
+    }
+    case ProximityRanging::Id: {
+        switch (path.mCommandId)
+        {
+        case ProximityRanging::Commands::StartRangingResponse::Id: {
+            ProximityRanging::Commands::StartRangingResponse::DecodableType value;
+            ReturnErrorOnFailure(chip::app::DataModel::Decode(*data, value));
+            return DataModelLogger::LogValue("StartRangingResponse", 1, value);
+        }
+        case ProximityRanging::Commands::RangingResult::Id: {
+            ProximityRanging::Commands::RangingResult::DecodableType value;
+            ReturnErrorOnFailure(chip::app::DataModel::Decode(*data, value));
+            return DataModelLogger::LogValue("RangingResult", 1, value);
         }
         }
         break;

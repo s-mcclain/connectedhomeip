@@ -16471,6 +16471,118 @@ public class ClusterInfoMapping {
   }
 
 
+  public static class DelegatedProximityRangingClusterStartRangingResponseCallback implements ChipClusters.ProximityRangingCluster.StartRangingResponseCallback, DelegatedClusterCallback {
+    private ClusterCommandCallback callback;
+    @Override
+    public void setCallbackDelegate(ClusterCommandCallback callback) {
+      this.callback = callback;
+    }
+
+    @Override
+    public void onSuccess(Integer sessionID, Optional<byte[]> targetWiFiDevIK, Optional<Long> targetBLEDeviceId, Integer resultCode) {
+      Map<CommandResponseInfo, Object> responseValues = new LinkedHashMap<>();
+
+      CommandResponseInfo sessionIDResponseValue = new CommandResponseInfo("sessionID", "Integer");
+      responseValues.put(sessionIDResponseValue, sessionID);
+      CommandResponseInfo targetWiFiDevIKResponseValue = new CommandResponseInfo("targetWiFiDevIK", "Optional<byte[]>");
+      responseValues.put(targetWiFiDevIKResponseValue, targetWiFiDevIK);
+      CommandResponseInfo targetBLEDeviceIdResponseValue = new CommandResponseInfo("targetBLEDeviceId", "Optional<Long>");
+      responseValues.put(targetBLEDeviceIdResponseValue, targetBLEDeviceId);
+      CommandResponseInfo resultCodeResponseValue = new CommandResponseInfo("resultCode", "Integer");
+      responseValues.put(resultCodeResponseValue, resultCode);
+      callback.onSuccess(responseValues);
+    }
+
+    @Override
+    public void onError(Exception error) {
+      callback.onFailure(error);
+    }
+  }
+  public static class DelegatedProximityRangingClusterRangingCapabilitiesAttributeCallback implements ChipClusters.ProximityRangingCluster.RangingCapabilitiesAttributeCallback, DelegatedClusterCallback {
+    private ClusterCommandCallback callback;
+    @Override
+    public void setCallbackDelegate(ClusterCommandCallback callback) {
+      this.callback = callback;
+    }
+
+    @Override
+    public void onSuccess(List<ChipStructs.ProximityRangingClusterRangingCapabilitiesStruct> valueList) {
+      Map<CommandResponseInfo, Object> responseValues = new LinkedHashMap<>();
+      CommandResponseInfo commandResponseInfo = new CommandResponseInfo("valueList", "List<ChipStructs.ProximityRangingClusterRangingCapabilitiesStruct>");
+      responseValues.put(commandResponseInfo, valueList);
+      callback.onSuccess(responseValues);
+    }
+
+    @Override
+    public void onError(Exception ex) {
+      callback.onFailure(ex);
+    }
+  }
+
+  public static class DelegatedProximityRangingClusterGeneratedCommandListAttributeCallback implements ChipClusters.ProximityRangingCluster.GeneratedCommandListAttributeCallback, DelegatedClusterCallback {
+    private ClusterCommandCallback callback;
+    @Override
+    public void setCallbackDelegate(ClusterCommandCallback callback) {
+      this.callback = callback;
+    }
+
+    @Override
+    public void onSuccess(List<Long> valueList) {
+      Map<CommandResponseInfo, Object> responseValues = new LinkedHashMap<>();
+      CommandResponseInfo commandResponseInfo = new CommandResponseInfo("valueList", "List<Long>");
+      responseValues.put(commandResponseInfo, valueList);
+      callback.onSuccess(responseValues);
+    }
+
+    @Override
+    public void onError(Exception ex) {
+      callback.onFailure(ex);
+    }
+  }
+
+  public static class DelegatedProximityRangingClusterAcceptedCommandListAttributeCallback implements ChipClusters.ProximityRangingCluster.AcceptedCommandListAttributeCallback, DelegatedClusterCallback {
+    private ClusterCommandCallback callback;
+    @Override
+    public void setCallbackDelegate(ClusterCommandCallback callback) {
+      this.callback = callback;
+    }
+
+    @Override
+    public void onSuccess(List<Long> valueList) {
+      Map<CommandResponseInfo, Object> responseValues = new LinkedHashMap<>();
+      CommandResponseInfo commandResponseInfo = new CommandResponseInfo("valueList", "List<Long>");
+      responseValues.put(commandResponseInfo, valueList);
+      callback.onSuccess(responseValues);
+    }
+
+    @Override
+    public void onError(Exception ex) {
+      callback.onFailure(ex);
+    }
+  }
+
+  public static class DelegatedProximityRangingClusterAttributeListAttributeCallback implements ChipClusters.ProximityRangingCluster.AttributeListAttributeCallback, DelegatedClusterCallback {
+    private ClusterCommandCallback callback;
+    @Override
+    public void setCallbackDelegate(ClusterCommandCallback callback) {
+      this.callback = callback;
+    }
+
+    @Override
+    public void onSuccess(List<Long> valueList) {
+      Map<CommandResponseInfo, Object> responseValues = new LinkedHashMap<>();
+      CommandResponseInfo commandResponseInfo = new CommandResponseInfo("valueList", "List<Long>");
+      responseValues.put(commandResponseInfo, valueList);
+      callback.onSuccess(responseValues);
+    }
+
+    @Override
+    public void onError(Exception ex) {
+      callback.onFailure(ex);
+    }
+  }
+
+
   public static class DelegatedWiFiNetworkManagementClusterNetworkPassphraseResponseCallback implements ChipClusters.WiFiNetworkManagementCluster.NetworkPassphraseResponseCallback, DelegatedClusterCallback {
     private ClusterCommandCallback callback;
     @Override
@@ -23443,6 +23555,10 @@ public class ClusterInfoMapping {
       (ptr, endpointId) -> new ChipClusters.AmbientContextSensingCluster(ptr, endpointId), new HashMap<>());
     clusterMap.put("ambientContextSensing", ambientContextSensingClusterInfo);
 
+    ClusterInfo proximityRangingClusterInfo = new ClusterInfo(
+      (ptr, endpointId) -> new ChipClusters.ProximityRangingCluster(ptr, endpointId), new HashMap<>());
+    clusterMap.put("proximityRanging", proximityRangingClusterInfo);
+
     ClusterInfo wiFiNetworkManagementClusterInfo = new ClusterInfo(
       (ptr, endpointId) -> new ChipClusters.WiFiNetworkManagementCluster(ptr, endpointId), new HashMap<>());
     clusterMap.put("wiFiNetworkManagement", wiFiNetworkManagementClusterInfo);
@@ -23698,6 +23814,7 @@ public class ClusterInfoMapping {
     destination.get("radonConcentrationMeasurement").combineCommands(source.get("radonConcentrationMeasurement"));
     destination.get("soilMeasurement").combineCommands(source.get("soilMeasurement"));
     destination.get("ambientContextSensing").combineCommands(source.get("ambientContextSensing"));
+    destination.get("proximityRanging").combineCommands(source.get("proximityRanging"));
     destination.get("wiFiNetworkManagement").combineCommands(source.get("wiFiNetworkManagement"));
     destination.get("threadBorderRouterManagement").combineCommands(source.get("threadBorderRouterManagement"));
     destination.get("threadNetworkDirectory").combineCommands(source.get("threadNetworkDirectory"));
@@ -29085,6 +29202,87 @@ public class ClusterInfoMapping {
     Map<String, InteractionInfo> ambientContextSensingClusterInteractionInfoMap = new LinkedHashMap<>();
 
     commandMap.put("ambientContextSensing", ambientContextSensingClusterInteractionInfoMap);
+
+    Map<String, InteractionInfo> proximityRangingClusterInteractionInfoMap = new LinkedHashMap<>();
+
+    Map<String, CommandParameterInfo> proximityRangingstartRangingRequestCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+
+    CommandParameterInfo proximityRangingstartRangingRequesttechnologyCommandParameterInfo = new CommandParameterInfo("technology", Integer.class, Integer.class);
+    proximityRangingstartRangingRequestCommandParams.put("technology",proximityRangingstartRangingRequesttechnologyCommandParameterInfo);
+
+
+
+
+
+    CommandParameterInfo proximityRangingstartRangingRequestfrequencyBandCommandParameterInfo = new CommandParameterInfo("frequencyBand", Optional.class, Integer.class);
+    proximityRangingstartRangingRequestCommandParams.put("frequencyBand",proximityRangingstartRangingRequestfrequencyBandCommandParameterInfo);
+
+    CommandParameterInfo proximityRangingstartRangingRequestbandwidthCommandParameterInfo = new CommandParameterInfo("bandwidth", Optional.class, Integer.class);
+    proximityRangingstartRangingRequestCommandParams.put("bandwidth",proximityRangingstartRangingRequestbandwidthCommandParameterInfo);
+
+    CommandParameterInfo proximityRangingstartRangingRequestsecurityModeCommandParameterInfo = new CommandParameterInfo("securityMode", Optional.class, Integer.class);
+    proximityRangingstartRangingRequestCommandParams.put("securityMode",proximityRangingstartRangingRequestsecurityModeCommandParameterInfo);
+
+
+    InteractionInfo proximityRangingstartRangingRequestInteractionInfo = new InteractionInfo(
+      (cluster, callback, commandArguments) -> {
+        ((ChipClusters.ProximityRangingCluster) cluster)
+          .startRangingRequest((ChipClusters.ProximityRangingCluster.StartRangingResponseCallback) callback
+           , (Integer)
+             commandArguments.get("technology")
+
+           , (Optional<ChipStructs.ProximityRangingClusterWiFiRangingDeviceRoleConfigStruct>)
+             commandArguments.get("wiFiRangingDeviceRoleConfig")
+
+           , (Optional<ChipStructs.ProximityRangingClusterBLERangingDeviceRoleConfigStruct>)
+             commandArguments.get("BLERangingDeviceRoleConfig")
+
+           , (Optional<ChipStructs.ProximityRangingClusterBTChannelSoundingDeviceRoleConfigStruct>)
+             commandArguments.get("BTChannelSoundingDeviceRoleConfig")
+
+           , (Optional<ChipStructs.ProximityRangingClusterUWBRangingDeviceRoleConfigStruct>)
+             commandArguments.get("UWBRangingDeviceRoleConfig")
+
+           , (Optional<Integer>)
+             commandArguments.get("frequencyBand")
+
+           , (Optional<Integer>)
+             commandArguments.get("bandwidth")
+
+           , (Optional<Integer>)
+             commandArguments.get("securityMode")
+
+           , (ChipStructs.ProximityRangingClusterRangingTriggerConditionStruct)
+             commandArguments.get("trigger")
+
+           , (Optional<ChipStructs.ProximityRangingClusterReportingConditionStruct>)
+             commandArguments.get("reportingCondition")
+
+            );
+        },
+        () -> new DelegatedProximityRangingClusterStartRangingResponseCallback(),
+        proximityRangingstartRangingRequestCommandParams
+      );
+    proximityRangingClusterInteractionInfoMap.put("startRangingRequest", proximityRangingstartRangingRequestInteractionInfo);
+
+    Map<String, CommandParameterInfo> proximityRangingstopRangingRequestCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+
+    CommandParameterInfo proximityRangingstopRangingRequestsessionIDCommandParameterInfo = new CommandParameterInfo("sessionID", Integer.class, Integer.class);
+    proximityRangingstopRangingRequestCommandParams.put("sessionID",proximityRangingstopRangingRequestsessionIDCommandParameterInfo);
+    InteractionInfo proximityRangingstopRangingRequestInteractionInfo = new InteractionInfo(
+      (cluster, callback, commandArguments) -> {
+        ((ChipClusters.ProximityRangingCluster) cluster)
+        .stopRangingRequest((DefaultClusterCallback) callback
+        , (Integer)
+        commandArguments.get("sessionID")
+        );
+      },
+      () -> new DelegatedDefaultClusterCallback(),
+        proximityRangingstopRangingRequestCommandParams
+    );
+    proximityRangingClusterInteractionInfoMap.put("stopRangingRequest", proximityRangingstopRangingRequestInteractionInfo);
+
+    commandMap.put("proximityRanging", proximityRangingClusterInteractionInfoMap);
 
     Map<String, InteractionInfo> wiFiNetworkManagementClusterInteractionInfoMap = new LinkedHashMap<>();
 
