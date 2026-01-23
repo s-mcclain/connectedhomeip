@@ -1,0 +1,246 @@
+<?xml version="1.0"?>
+<!--
+Copyright (c) 2026 Project CHIP Authors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<configurator>
+  <domain name="CHIP" />
+
+  <cluster>
+    <domain>Measurement &amp; Sensing</domain>
+    <name>Proximity Ranging</name>
+    <code>0x0433</code>
+    <define>PROXIMITY_RANGING_CLUSTER</define>
+    <description>This cluster provides an interface for configuring proximity ranging sessions and reporting ranging measurement data.</description>
+
+    <!-- Abbreviations used in descriptions -->
+    <tag name="WFUSDPD" description="Wi-Fi USD Proximity Detection" />
+    <tag name="BTCS" description="Bluetooth Channel Sounding" />
+    <tag name="UWBRNG" description="UWB Ranging" />
+    <tag name="BLERBC" description="BLE Beacon RSSI" />
+
+    <client tick="false" init="false">true</client>
+    <server tick="false" init="false">true</server>
+
+    <!-- Current cluster version -->
+    <globalAttribute side="either" code="0xFFFD" value="1" />
+    <!-- Cluster feature map -->
+    <globalAttribute side="server" code="0xFFFC" value="0x0001">
+      <featureBit tag="WFUSDPD" bit="0">true</featureBit>
+      <featureBit tag="UWBRNG" bit="1">false</featureBit>
+      <featureBit tag="BLERBC" bit="2">false</featureBit>
+    </globalAttribute>
+
+    <features>
+      <feature bit="0" code="WFUSDPD" name="Wi-Fi USD Proximity Detection" summary="Supports Wi-Fi USD Proximity Detection ranging">
+        <optionalConform choice="a" more="true" min="1"/>
+      </feature>
+      <feature bit="1" code="BTCS" name="Bluetooth Channel Sounding" summary="Supports Bluetooth Channel Sounding ranging">
+        <optionalConform choice="a" more="true" min="1"/>
+      </feature>
+      <feature bit="2" code="UWBRNG" name="UWB Ranging" summary="Supports UWB Ranging">
+        <optionalConform choice="a" more="true" min="1"/>
+      </feature>
+      <feature bit="3" code="BLERBC" name="BLE Beacon RSSI" summary="Supports BLE Beacon RSSI ranging">
+        <optionalConform choice="a" more="true" min="1"/>
+      </feature>
+    </features>
+
+    <!-- Attributes -->
+    <attribute side="server" code="0x0000" name="RangingCapabilities" define="RANGING_CAPABILITIES" type="array" entryType="RangingCapabilitiesStruct">
+      <description>List of ranging capabilities supported by this device</description>
+      <access op="read" role="view"/>
+      <mandatoryConform/>
+    </attribute>
+    <attribute side="server" code="0x0001" name="WiFiDevIK" define="WIFI_DEV_IK" type="octet_string" length="16" optional="true">
+      <description>Wi-Fi Device Identity Key for USD Proximity Detection</description>
+      <access op="read" role="view"/>
+      <mandatoryConform>
+        <feature name="WFUSDPD"/>
+      </mandatoryConform>
+    </attribute>
+    <attribute side="server" code="0x0002" name="BLEDeviceId" define="BLE_DEVICE_ID" type="int64u" optional="true">
+      <description>BLE Device Identifier for BLE ranging</description>
+      <access op="read" role="view"/>
+      <mandatoryConform>
+        <feature name="BLERBC"/>
+      </mandatoryConform>
+    </attribute>
+
+    <!-- Commands -->
+    <command source="client" code="0x00" name="StartRangingRequest" response="StartRangingResponse">
+      <description>Request to start a ranging session with specified parameters</description>
+      <access op="invoke" role="operate"/>
+      <arg name="Technology" type="RangingTechEnum"/>
+      <arg name="WiFiRangingDeviceRoleConfig" type="WiFiRangingDeviceRoleConfigStruct" optional="true"/>
+      <arg name="BLERangingDeviceRoleConfig" type="BLERangingDeviceRoleConfigStruct" optional="true"/>
+      <arg name="BTChannelSoundingDeviceRoleConfig" type="BTChannelSoundingDeviceRoleConfigStruct" optional="true"/>
+      <arg name="UWBRangingDeviceRoleConfig" type="UWBRangingDeviceRoleConfigStruct" optional="true"/>
+      <arg name="FrequencyBand" type="RadioBandEnum" optional="true"/>
+      <arg name="Bandwidth" type="RangingBandwidthEnum" optional="true"/>
+      <arg name="SecurityMode" type="RangingSecurityEnum" optional="true"/>
+      <arg name="Trigger" type="RangingTriggerConditionStruct"/>
+      <arg name="ReportingCondition" type="ReportingConditionStruct" optional="true"/>
+      <mandatoryConform/>
+    </command>
+    <command source="server" code="0x01" name="StartRangingResponse" disableDefaultResponse="true">
+      <description>Response to StartRangingRequest command</description>
+      <arg name="SessionID" type="int8u"/>
+      <arg name="TargetWiFiDevIK" type="octet_string" length="16" optional="true"/>
+      <arg name="TargetBLEDeviceId" type="int64u" optional="true"/>
+      <arg name="ResultCode" type="ResultCodeEnum"/>
+      <mandatoryConform/>
+    </command>
+    <command source="client" code="0x02" name="StopRangingRequest">
+      <description>Request to stop an ongoing ranging session</description>
+      <access op="invoke" role="operate"/>
+      <arg name="SessionID" type="int8u"/>
+      <mandatoryConform/>
+    </command>
+    <command source="server" code="0x03" name="RangingResult">
+      <description>Report ranging measurement result from server to client</description>
+      <arg name="SessionID" type="int8u"/>
+      <arg name="RangingResultData" type="RangingMeasurementDataStruct"/>
+      <mandatoryConform/>
+    </command>
+  </cluster>
+
+  <!-- Cluster Data Types -->
+
+  <!-- Enums -->
+  <enum name="RangingTechEnum" type="enum8">
+    <cluster code="0x0433"/>
+    <item value="0" name="WiFiUSDProximityDetection" summary="Wi-Fi USD Proximity Detection"/>
+    <item value="1" name="BluetoothChannelSounding" summary="Bluetooth Channel Sounding"/>
+    <item value="2" name="UWBRanging" summary="Ultra-Wideband Ranging"/>
+    <item value="3" name="BLEBeaconRSSI" summary="BLE Beacon RSSI"/>
+  </enum>
+
+  <enum name="RadioBandEnum" type="enum8">
+    <cluster code="0x0433"/>
+    <item value="0" name="Band2400MHz" summary="2.4 GHz band"/>
+    <item value="1" name="Band5GHz" summary="5 GHz band"/>
+    <item value="2" name="Band6GHz" summary="6 GHz band"/>
+    <item value="3" name="Band60GHz" summary="60 GHz band"/>
+  </enum>
+
+  <enum name="RangingBandwidthEnum" type="enum8">
+    <cluster code="0x0433"/>
+    <item value="0" name="BW1MHz" summary="1 MHz bandwidth"/>
+    <item value="1" name="BW2MHz" summary="2 MHz bandwidth"/>
+    <item value="2" name="BW20MHz" summary="20 MHz bandwidth"/>
+    <item value="3" name="BW40MHz" summary="40 MHz bandwidth"/>
+    <item value="4" name="BW80MHz" summary="80 MHz bandwidth"/>
+    <item value="5" name="BW160MHz" summary="160 MHz bandwidth"/>
+    <item value="6" name="BW320MHz" summary="320 MHz bandwidth"/>
+  </enum>
+
+  <enum name="RangingSecurityEnum" type="enum8">
+    <cluster code="0x0433"/>
+    <item value="0" name="None" summary="No security"/>
+    <item value="1" name="MACEncryption" summary="MAC layer encryption enabled"/>
+    <item value="2" name="Authentication" summary="Authentication enabled"/>
+    <item value="3" name="PHYSecurity" summary="PHY layer security enabled"/>
+  </enum>
+
+  <enum name="ResultCodeEnum" type="enum8">
+    <cluster code="0x0433"/>
+    <item value="0" name="Accepted" summary="Request accepted"/>
+    <item value="1" name="InfeasibleRFRangingConfiguration" summary="Infeasible RF ranging configuration"/>
+    <item value="2" name="InfeasibleRangingTriggers" summary="Infeasible ranging triggers"/>
+    <item value="3" name="SessionCapacityReached" summary="Session capacity reached"/>
+    <item value="4" name="Occupied" summary="Device is unable to perform ranging at this time"/>
+  </enum>
+
+  <enum name="DeviceRoleEnum" type="enum8">
+    <cluster code="0x0433"/>
+    <item value="0" name="Initiator" summary="Ranging initiator (Wi-Fi Subscriber)"/>
+    <item value="1" name="Responder" summary="Ranging responder (Wi-Fi Publisher)"/>
+  </enum>
+
+  <!-- Structs -->
+  <struct name="RangingCapabilitiesStruct">
+    <cluster code="0x0433"/>
+    <item fieldId="0" name="Technology" type="RangingTechEnum"/>
+    <item fieldId="1" name="FrequencyBand" type="RadioBandEnum"/>
+    <item fieldId="2" name="MobilitySupport" type="boolean"/>
+    <item fieldId="3" name="PeriodicRangingSupport" type="boolean"/>
+  </struct>
+
+  <struct name="WiFiRangingDeviceRoleConfigStruct">
+    <cluster code="0x0433"/>
+    <item fieldId="0" name="Role" type="DeviceRoleEnum"/>
+    <item fieldId="1" name="TargetPeerDevIK" type="octet_string" length="16"/>
+    <item fieldId="2" name="PMK" type="octet_string" length="32" optional="true"/>
+  </struct>
+
+  <struct name="BLERangingDeviceRoleConfigStruct">
+    <cluster code="0x0433"/>
+    <item fieldId="0" name="Role" type="DeviceRoleEnum"/>
+    <item fieldId="1" name="PeerBLEDeviceID" type="int64u"/>
+    <item fieldId="2" name="PMK" type="octet_string" length="32" optional="true"/>
+  </struct>
+
+  <struct name="BTChannelSoundingDeviceRoleConfigStruct">
+    <cluster code="0x0433"/>
+    <item fieldId="0" name="Role" type="DeviceRoleEnum"/>
+    <item fieldId="1" name="TargetPeerDevIK" type="octet_string" length="16"/>
+    <item fieldId="2" name="PMK" type="octet_string" length="32" optional="true"/>
+  </struct>
+
+  <struct name="UWBRangingDeviceRoleConfigStruct">
+    <cluster code="0x0433"/>
+    <item fieldId="0" name="Role" type="DeviceRoleEnum"/>
+    <item fieldId="1" name="TargetPeerDevIK" type="octet_string" length="16"/>
+    <item fieldId="2" name="PASNCredential" type="octet_string" length="32" optional="true"/>
+  </struct>
+
+  <struct name="RangingTriggerConditionStruct">
+    <cluster code="0x0433"/>
+    <item fieldId="0" name="StartTimeDelay" type="elapsed_s"/>
+    <item fieldId="1" name="EndTimeDelay" type="elapsed_s" optional="true" min="1"/>
+    <item fieldId="2" name="RangingInstanceInterval" type="elapsed_s" optional="true" min="1"/>
+  </struct>
+
+  <struct name="ReportingConditionStruct">
+    <cluster code="0x0433"/>
+    <item fieldId="0" name="MinDistanceCondition" type="int16s" optional="true"/>
+    <item fieldId="1" name="MaxDistanceCondition" type="int16s" optional="true"/>
+    <item fieldId="2" name="AccuracyCondition" type="int16s" optional="true"/>
+    <item fieldId="3" name="StartTimePeriod" type="elapsed_s" optional="true"/>
+    <item fieldId="4" name="EndTimePeriod" type="elapsed_s" optional="true"/>
+  </struct>
+
+  <struct name="RangingMeasurementDataStruct">
+    <cluster code="0x0433"/>
+    <item fieldId="0" name="WiFiDevIK" type="octet_string" length="16" optional="true"/>
+    <item fieldId="1" name="BLEDeviceId" type="int64u" optional="true"/>
+    <item fieldId="2" name="TimeOfMeasurement" type="epoch_s"/>
+    <item fieldId="3" name="Distance" type="int16s"/>
+    <item fieldId="4" name="Accuracy" type="int16u" optional="true"/>
+    <item fieldId="5" name="RDR" type="RDRStruct" optional="true"/>
+    <item fieldId="6" name="RSSI" type="int8s" optional="true"/>
+    <item fieldId="7" name="TxPower" type="int8s" optional="true"/>
+  </struct>
+
+  <struct name="RDRStruct">
+    <cluster code="0x0433"/>
+    <item fieldId="0" name="Azimuth" type="int16s"/>
+    <item fieldId="1" name="Elevation" type="int8s"/>
+    <item fieldId="2" name="AzimuthAccuracy" type="int8u"/>
+    <item fieldId="3" name="ElevationAccuracy" type="int8u"/>
+    <item fieldId="4" name="Reference" type="int8s"/>
+  </struct>
+
+</configurator>
