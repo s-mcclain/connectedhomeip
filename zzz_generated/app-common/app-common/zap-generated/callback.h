@@ -7643,18 +7643,6 @@ bool emberAfColorControlClusterStepColorTemperatureCallback(
     chip::app::CommandHandler * commandObj, const chip::app::ConcreteCommandPath & commandPath,
     const chip::app::Clusters::ColorControl::Commands::StepColorTemperature::DecodableType & commandData);
 /**
- * @brief Proximity Ranging Cluster StartRangingRequest Command callback (from client)
- */
-bool emberAfProximityRangingClusterStartRangingRequestCallback(
-    chip::app::CommandHandler * commandObj, const chip::app::ConcreteCommandPath & commandPath,
-    const chip::app::Clusters::ProximityRanging::Commands::StartRangingRequest::DecodableType & commandData);
-/**
- * @brief Proximity Ranging Cluster StopRangingRequest Command callback (from client)
- */
-bool emberAfProximityRangingClusterStopRangingRequestCallback(
-    chip::app::CommandHandler * commandObj, const chip::app::ConcreteCommandPath & commandPath,
-    const chip::app::Clusters::ProximityRanging::Commands::StopRangingRequest::DecodableType & commandData);
-/**
  * @brief Channel Cluster ChangeChannel Command callback (from client)
  */
 bool emberAfChannelClusterChangeChannelCallback(
