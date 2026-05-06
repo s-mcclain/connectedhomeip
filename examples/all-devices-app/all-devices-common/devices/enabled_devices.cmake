@@ -48,6 +48,8 @@ set(ALL_DEVICES_DEVICE_SRCDIRS
     "${ALL_DEVICES_COMMON_DIR}/devices/speaker/impl"
     "${ALL_DEVICES_COMMON_DIR}/devices/temperature-sensor"
     "${ALL_DEVICES_COMMON_DIR}/devices/temperature-sensor/impl"
+    "${ALL_DEVICES_COMMON_DIR}/devices/proximity-ranger"
+    "${ALL_DEVICES_COMMON_DIR}/devices/proximity-ranger/impl"
     # keep-sorted: end
 )
 
@@ -85,6 +87,7 @@ foreach(_key
         speaker
         temperature-sensor
         water-leak-detector
+        proximity-ranger
         # keep-sorted: end
     )
     string(REPLACE "-" "_" _suffix "${_key}")
