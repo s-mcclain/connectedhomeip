@@ -19,6 +19,7 @@
 
 #include <crypto/RandUtils.h>
 #include <lib/support/BufferWriter.h>
+#include <lib/support/logging/CHIPLogging.h>
 #include <string.h>
 
 BleRssiRangingAdapter::~BleRssiRangingAdapter() = default;
@@ -72,6 +73,10 @@ CHIP_ERROR BleRssiRangingAdapter::DecodeBeaconPayload(const chip::Ble::ChipBLEPr
 
     if (memcmp(payload.GetObfuscatedBLEDeviceId(), expected, sizeof(expected)) != 0)
     {
+        ChipLogProgress(AppServer, "DecodeBeaconPayload: BLEDeviceId mismatch - received 0x" ChipLogFormatX64
+                                   ", expected 0x" ChipLogFormatX64,
+                        ChipLogValueX64(chip::Encoding::BigEndian::Get64(payload.GetObfuscatedBLEDeviceId())),
+                        ChipLogValueX64(candidateBleDeviceId));
         return CHIP_ERROR_NOT_FOUND;
     }
 
