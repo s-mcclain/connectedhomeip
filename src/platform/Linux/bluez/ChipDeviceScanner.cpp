@@ -53,6 +53,27 @@ bool BluezGetChipDeviceInfo(BluezDevice1 & aDevice, chip::Ble::ChipBLEDeviceIden
     return true;
 }
 
+/// Retrieve CHIP proximity ranging identification info from the device advertising data
+bool BluezGetProximityRangingInfo(BluezDevice1 & aDevice, chip::Ble::ChipBLEProximityRangingIdentificationInfo & aInfo)
+{
+    GVariant * serviceData = bluez_device1_get_service_data(&aDevice);
+    VerifyOrReturnError(serviceData != nullptr, false);
+
+    GAutoPtr<GVariant> dataValue(g_variant_lookup_value(serviceData, Ble::CHIP_BLE_SERVICE_LONG_UUID_STR, nullptr));
+    VerifyOrReturnError(dataValue != nullptr, false);
+
+    gsize dataLen          = 0;
+    const void * dataBytes = g_variant_get_fixed_array(dataValue.get(), &dataLen, sizeof(uint8_t));
+    VerifyOrReturnError(dataBytes != nullptr && dataLen >= sizeof(aInfo), false);
+
+    // Check opcode is 0x02 (proximity ranging)
+    const uint8_t * bytes = static_cast<const uint8_t *>(dataBytes);
+    VerifyOrReturnError(bytes[0] == chip::Ble::ChipBLEProximityRangingIdentificationInfo::kOpCode, false);
+
+    memcpy(&aInfo, dataBytes, sizeof(aInfo));
+    return true;
+}
+
 } // namespace
 
 CHIP_ERROR ChipDeviceScanner::Init(BluezAdapter1 * adapter, ChipDeviceScannerDelegate * delegate)
@@ -178,15 +199,35 @@ void ChipDeviceScanner::ReportDevice(BluezDevice1 & device)
     VerifyOrReturn(strcmp(bluez_device1_get_adapter(&device),
                           g_dbus_proxy_get_object_path(reinterpret_cast<GDBusProxy *>(mAdapter.get()))) == 0);
 
-    chip::Ble::ChipBLEDeviceIdentificationInfo deviceInfo;
+    bool matched = false;
 
-    if (!BluezGetChipDeviceInfo(device, deviceInfo))
+    chip::Ble::ChipBLEDeviceIdentificationInfo deviceInfo;
+    if (BluezGetChipDeviceInfo(device, deviceInfo))
     {
-        ChipLogDetail(Ble, "Device %s does not look like a CHIP device.", bluez_device1_get_address(&device));
-        return;
+        mDelegate->OnDeviceScanned(device, deviceInfo);
+        matched = true;
     }
 
-    mDelegate->OnDeviceScanned(device, deviceInfo);
+    chip::Ble::ChipBLEProximityRangingIdentificationInfo rangingInfo;
+    if (BluezGetProximityRangingInfo(device, rangingInfo))
+    {
+        // Read RSSI from D-Bus cached property
+        int8_t rssi          = 0;
+        GVariant * rssiVariant = g_dbus_proxy_get_cached_property(G_DBUS_PROXY(&device), "RSSI");
+        if (rssiVariant != nullptr)
+        {
+            rssi = static_cast<int8_t>(g_variant_get_int16(rssiVariant));
+            g_variant_unref(rssiVariant);
+        }
+        ChipLogProgress(Ble, "Proximity ranging beacon from %s RSSI=%d", bluez_device1_get_address(&device), rssi);
+        mDelegate->OnDeviceScanned(device, rangingInfo, rssi);
+        matched = true;
+    }
+
+    if (!matched)
+    {
+        ChipLogDetail(Ble, "Device %s does not look like a CHIP device.", bluez_device1_get_address(&device));
+    }
 }
 
 void ChipDeviceScanner::RemoveDevice(BluezDevice1 & device)

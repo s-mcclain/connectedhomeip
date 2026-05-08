@@ -51,6 +51,13 @@ set(SRC_DIRS_LIST
     ${ALL_DEVICES_DEVICE_SRCDIRS}
 )
 
+# BLE RSSI Ranging: select NimBLE or Bluedroid implementation
+if(CONFIG_BT_NIMBLE_ENABLED)
+    list(APPEND SRC_DIRS_LIST "${CMAKE_CURRENT_LIST_DIR}/nimble")
+elseif(CONFIG_BT_BLUEDROID_ENABLED)
+    list(APPEND SRC_DIRS_LIST "${CMAKE_CURRENT_LIST_DIR}/bluedroid")
+endif()
+
 idf_component_register(PRIV_INCLUDE_DIRS ${PRIV_INCLUDE_DIRS_LIST}
                        SRC_DIRS ${SRC_DIRS_LIST})
 

@@ -43,6 +43,11 @@ public:
     // Called when a CHIP device was found
     virtual void OnDeviceScanned(BluezDevice1 & device, const chip::Ble::ChipBLEDeviceIdentificationInfo & info) = 0;
 
+    // Called when a proximity ranging beacon is found
+    virtual void OnDeviceScanned(BluezDevice1 & device, const chip::Ble::ChipBLEProximityRangingIdentificationInfo & info,
+                                 int8_t rssi)
+    {}
+
     // Called when a scan was completed (stopped or timed out)
     virtual void OnScanComplete() = 0;
 

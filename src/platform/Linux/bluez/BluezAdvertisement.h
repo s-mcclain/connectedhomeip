@@ -26,6 +26,7 @@
 
 #include <ble/Ble.h>
 #include <lib/core/CHIPError.h>
+#include <lib/support/Span.h>
 #include <platform/GLibTypeDeleter.h>
 #include <platform/Linux/dbus/bluez/DBusBluez.h>
 
@@ -35,6 +36,15 @@
 namespace chip {
 namespace DeviceLayer {
 namespace Internal {
+
+class BluezAdvertisementDelegate
+{
+public:
+    virtual ~BluezAdvertisementDelegate() = default;
+    virtual void OnAdvertisementReleased() {}
+    virtual void OnAdvertisementStartComplete(CHIP_ERROR err) {}
+    virtual void OnAdvertisementStopComplete(CHIP_ERROR err) {}
+};
 
 class BluezAdvertisement
 {
@@ -49,10 +59,17 @@ public:
     BluezAdvertisement(BluezEndpoint & aEndpoint) : mEndpoint(aEndpoint) {}
     ~BluezAdvertisement() { Shutdown(); }
 
-    CHIP_ERROR Init(BluezAdapter1 * apAdapter, const char * aAdvUUID, const char * aAdvName);
+    CHIP_ERROR Init(BluezAdapter1 * apAdapter, const char * aAdvUUID, const char * aAdvName, bool aBroadcast = false);
     CHIP_ERROR SetupServiceData(ServiceDataFlags aFlags);
     CHIP_ERROR SetIntervals(AdvertisingIntervals aAdvIntervals);
     void Shutdown();
+
+    /// Set raw service data bytes under the configured UUID
+    CHIP_ERROR SetServiceDataRaw(chip::ByteSpan data);
+
+    /// Set a delegate for advertisement lifecycle callbacks.
+    /// If set, the delegate is called instead of BLEManagerImpl notifications.
+    void SetDelegate(BluezAdvertisementDelegate * delegate) { mDelegate = delegate; }
 
     /// Start BLE advertising.
     ///
@@ -85,8 +102,15 @@ private:
     GAutoPtr<BluezAdapter1> mAdapter;
     GAutoPtr<BluezLEAdvertisement1> mAdv;
 
+    GDBusObjectManagerServer * GetObjectManager() const;
+
     bool mIsInitialized = false;
     bool mIsAdvertising = false;
+    bool mIsBroadcast = false;
+    BluezAdvertisementDelegate * mDelegate = nullptr;
+
+    // Own object manager for broadcast mode (when endpoint's GATT app is not needed)
+    GDBusObjectManagerServer * mOwnObjectManager = nullptr;
 
     char mAdvPath[64] = ""; // D-Bus path of the advertisement object
     char mAdvUUID[64] = ""; // UUID of the service to be advertised
