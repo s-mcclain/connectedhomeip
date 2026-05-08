@@ -27,6 +27,7 @@ source_set("linux") {
     "../include/AppRootNode.h",
     "../include/TermHandling.h",
     "DeviceFactoryPlatformOverride.cpp",
+    "LinuxBleRssiRangingAdapter.cpp",
     "TermHandling.cpp",
   ]
 

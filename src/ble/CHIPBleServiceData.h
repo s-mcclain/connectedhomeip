@@ -151,11 +151,7 @@ struct ChipBLEProximityRangingIdentificationInfo
      */
     constexpr static uint8_t kOpCode = 0x02;
 
-    constexpr static uint8_t kAdvertisementVersionMask      = 0xf0;
-    constexpr static uint8_t kAdvertisementVersionShiftBits = 4u;
-
     uint8_t OpCode;                    // Byte 0: 0x02 = Proximity Ranging
-    uint8_t AdvVersionAndReserved;     // Byte 1: Bits[7:4] = Adv version, Bits[3:0] = Reserved
     uint8_t MsgCounter[2];             // Bytes 2-3: 16-bit Message Counter (big-endian)
     uint8_t ObfuscatedBLEDeviceId[16]; // Bytes 4-19: HMAC-SHA256 obfuscated BLEDeviceId
     int8_t TxPower;                    // Byte 20: Tx Power
@@ -164,17 +160,6 @@ struct ChipBLEProximityRangingIdentificationInfo
     {
         memset(this, 0, sizeof(*this));
         OpCode = kOpCode;
-    }
-
-    uint8_t GetAdvVersion() const
-    {
-        return static_cast<uint8_t>((AdvVersionAndReserved & kAdvertisementVersionMask) >> kAdvertisementVersionShiftBits);
-    }
-
-    void SetAdvVersion(uint8_t version)
-    {
-        AdvVersionAndReserved = static_cast<uint8_t>((AdvVersionAndReserved & ~kAdvertisementVersionMask) |
-                                                     ((version << kAdvertisementVersionShiftBits) & kAdvertisementVersionMask));
     }
 
     uint16_t GetMsgCounter() const { return chip::Encoding::BigEndian::Get16(MsgCounter); }
@@ -198,8 +183,8 @@ struct ChipBLEProximityRangingIdentificationInfo
 
 } __attribute__((packed));
 
-static_assert(sizeof(ChipBLEProximityRangingIdentificationInfo) == 21,
-              "Proximity Ranging identification info must be exactly 21 bytes");
+static_assert(sizeof(ChipBLEProximityRangingIdentificationInfo) == 20,
+              "Proximity Ranging identification info must be exactly 20 bytes");
 
 } /* namespace Ble */
 } /* namespace chip */
